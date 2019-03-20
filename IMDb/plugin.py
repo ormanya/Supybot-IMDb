@@ -37,11 +37,12 @@ if sys.version_info[0] >= 3:
     def u(s):
         return s
 else:
-    import urllib2
-    from urllib import urlencode
-    from urllib2 import urlopen, Request, HTTPError, URLError
+    import urllib.request, urllib.error, urllib.parse
+    from urllib.parse import urlencode
+    from urllib.request import urlopen, Request
+    from urllib.error import HTTPError, URLError
     def u(s):
-        return unicode(s, "unicode_escape")
+        return str(s, "unicode_escape")
 
 class IMDb(callbacks.Plugin):
     """Add the help for "@plugin help IMDb" here
@@ -67,11 +68,11 @@ class IMDb(callbacks.Plugin):
 
         # find results that link to movie page, based on URL format
         for r in results:
-            print r[2]
+            print((r[2]))
             if (r[2].split('/')[-1][0:6] == 'Title?') or (r[2].split('/')[-2][0:2] == 'tt'):
                 imdb_url = format('%u', r[2])
                 # clean leading < and trailing >
-                print "URL is %s" % imdb_url
+                print(("URL is %s" % imdb_url))
                 break
 
         if imdb_url is None:
@@ -142,7 +143,7 @@ class IMDb(callbacks.Plugin):
 
         info['url'] = imdb_url
         try:
-            info['year'] = info['title'].rsplit('(', 1)[1].split(')')[0].replace(u('\u2013'), '-')
+            info['year'] = info['title'].rsplit('(', 1)[1].split(')')[0].replace(u('\\u2013'), '-')
         except IndexError:
             info['year'] = ''
 
